@@ -17,7 +17,7 @@ Resources:
     Properties:
       Timeout: 30
       Handler: index.resize
-      Runtime: python3.6
+      Runtime: python3.8
       CodeUri: ./src
       Policies:
         - Statement:
