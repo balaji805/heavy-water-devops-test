@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: A function is triggered off an upload to a bucket. It uploads a resized image to another bucket.
+Parameters:
+  BucketName:
+    Type: String
+    Default: hw-devops-test
+Resources:
+  ServiceApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+
+
+  ServiceApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Timeout: 30
+      Handler: index.resize
+      Runtime: python3.6
+      CodeUri: ./src
+      Policies:
+        - Statement:
+            [{
+              "Effect": "Allow",
+              "Action": "*",
+              "Resource": "*"
+            }]
+      Environment:
+        Variables:
+          BucketName: !Ref BucketName
+      Events:
+        PostApi:
+          Type: Api
+          Properties:
+            Path: /post
+            Method: POST
+            RestApiId:
+              Ref: ServiceApi
+      Tracing: Active
+
+
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+
+Outputs:
+
+  ApiUrl:
+    Description: The API URL
+    Value: !Sub "https://${ServiceApi}.execute-api.${AWS::Region}.amazonaws.com/"
+
+  LambdaServiceApiLogs:
+    Description: "Api Lambda Logs"
+    Value: !Sub "https://console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#logStream:group=/aws/lambda/${ServiceApiFunction};streamFilter=typeLogStreamPrefix"
+
+  DestBucket:
+    Description: "S3 Bucket name that will store the resized versions of the images from the source bucket"
+    Value: !Ref BucketName
