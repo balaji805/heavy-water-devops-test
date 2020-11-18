@@ -11,6 +11,15 @@ Resources:
           Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
           ImagePullCredentialsType: "CODEBUILD"
           PrivilegedMode: false
+          EnvironmentVariables:
+            - 
+              Name: "STACK_BUCKET_NAME"
+              Type: "PARAMETER_STORE"
+              Value: "hw_stack_bucket_name"
+            - 
+              Name: "STACK_NAME"
+              Type: "PARAMETER_STORE"
+              Value: "hw_stack_name"
         LogsConfig:
           CloudWatchLogs:
             Status: "ENABLED"
@@ -18,6 +27,46 @@ Resources:
           Type: "CODEPIPELINE"
           InsecureSsl: false
           BuildSpec: "buildSpec.yml"
+    
+    UnitTestHWProject:
+      Type: "AWS::CodeBuild::Project"
+      Properties:
+        ServiceRole: '{{resolve:ssm:codebuild_role_arn:1}}'
+        Artifacts:
+          Type: CODEPIPELINE
+        Environment:
+          Type: "LINUX_CONTAINER"
+          ComputeType: "BUILD_GENERAL1_SMALL"
+          Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+          ImagePullCredentialsType: "CODEBUILD"
+          PrivilegedMode: false
+        LogsConfig:
+          CloudWatchLogs:
+            Status: "ENABLED"
+        Source:
+          Type: "CODEPIPELINE"
+          InsecureSsl: false
+          BuildSpec: "unitTestSpec.yml"
+
+    IntegrationTestHWProject:
+      Type: "AWS::CodeBuild::Project"
+      Properties:
+        ServiceRole: '{{resolve:ssm:codebuild_role_arn:1}}'
+        Artifacts:
+          Type: CODEPIPELINE
+        Environment:
+          Type: "LINUX_CONTAINER"
+          ComputeType: "BUILD_GENERAL1_SMALL"
+          Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+          ImagePullCredentialsType: "CODEBUILD"
+          PrivilegedMode: false
+        LogsConfig:
+          CloudWatchLogs:
+            Status: "ENABLED"
+        Source:
+          Type: "CODEPIPELINE"
+          InsecureSsl: false
+          BuildSpec: "integrationTestSpec.yml"
 
     heavyWaterPipeline: 
       Type: "AWS::CodePipeline::Pipeline"
