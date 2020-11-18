@@ -4,7 +4,7 @@ Description: A function is triggered off an upload to a bucket. It uploads a res
 Parameters:
   BucketName:
     Type: String
-    Default: hw-devops-test
+    Default: hw-devops-test-balaji
 Resources:
   ServiceApi:
     Type: AWS::Serverless::Api
