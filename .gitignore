@@ -3,3 +3,28 @@ src/PIL
 src/Pillow-6.2.0.dist-info
 src/*/
 built_template.json
+
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+node_modules
+__pycache__
+node_modules
+
+# Serverless directories
+.serverless

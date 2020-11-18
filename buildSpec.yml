@@ -1,0 +1,11 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - set -x 
+  build:
+    commands:
+      - sam package --template-file template.yaml --use-json --s3-bucket heavy-water-pipeline-stack --s3-prefix heavy-water-demo --output-template-file built_template.json
+      - sam deploy --template-file built_template.json --stack-name heavy-water-demo --capabilities CAPABILITY_IAM
+      - echo "Done!"
