@@ -9,6 +9,6 @@ phases:
       - sam build -b ./build -m ./requirements.txt
       - mv ./build/ServiceApiFunction/* ./src/
       - rm -rf ./build
-      - sam package --template-file template.yaml --use-json --s3-bucket ${hw_stack_bucket_name} --s3-prefix ${hw_stack_name} --output-template-file built_template.json
-      - sam deploy --template-file built_template.json --stack-name ${hw_stack_name} --capabilities CAPABILITY_IAM
+      - sam package --template-file template.yaml --use-json --s3-bucket ${STACK_BUCKET_NAME} --s3-prefix ${STACK_NAME} --output-template-file built_template.json
+      - sam deploy --template-file built_template.json --stack-name ${STACK_NAME} --capabilities CAPABILITY_IAM
       - echo "Done!"
