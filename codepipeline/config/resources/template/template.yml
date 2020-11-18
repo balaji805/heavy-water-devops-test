@@ -1,0 +1,61 @@
+Resources:
+    DeployOnProductionProject:
+      Type: "AWS::CodeBuild::Project"
+      Properties:
+        ServiceRole: '{{resolve:ssm:codebuild_role_arn:1}}'
+        Artifacts:
+          Type: CODEPIPELINE
+        Environment:
+          Type: "LINUX_CONTAINER"
+          ComputeType: "BUILD_GENERAL1_SMALL"
+          Image: "aws/codebuild/amazonlinux2-x86_64-standard:3.0"
+          ImagePullCredentialsType: "CODEBUILD"
+          PrivilegedMode: false
+        LogsConfig:
+          CloudWatchLogs:
+            Status: "ENABLED"
+        Source:
+          Type: "CODEPIPELINE"
+          InsecureSsl: false
+          BuildSpec: "buildSpec.yml"
+
+    heavyWaterPipeline: 
+      Type: "AWS::CodePipeline::Pipeline"
+      Properties: 
+        RoleArn: '{{resolve:ssm:pipeline_role_arn:1}}'
+        ArtifactStore: 
+          Type: S3 
+          Location: '{{resolve:ssm:pipeline_bucket_name:1}}'
+        Stages:
+          - Name: Source
+            Actions:
+              - Name: Source1
+                ActionTypeId:
+                  Category: Source
+                  Owner: ThirdParty
+                  Version: "1"
+                  Provider: GitHub
+                Namespace: SourceVariables
+                OutputArtifacts:
+                  - Name: SourceArtifact
+                Configuration:
+                  Owner: '{{resolve:ssm:pipeline_githubOwner:1}}'
+                  Repo: '{{resolve:ssm:pipeline_githubRepo:1}}'
+                  Branch: '{{resolve:ssm:pipeline_githubBranch:1}}'
+                  OAuthToken: '{{resolve:secretsmanager:PIPELINE_GITHUB:SecretString:githubAccessToken}}'
+                RunOrder: 1
+          - Name: "DeployToPrd"
+            Actions:
+            - Name: "DeployToPrd"
+              InputArtifacts: 
+                - Name: "SourceArtifact"
+              OutputArtifacts:
+                - Name: "PrdDeployArtifact"
+              ActionTypeId:
+                Version: '1'
+                Owner: "AWS"
+                Category: "Build"
+                Provider: "CodeBuild"
+              RunOrder: 1
+              Configuration:
+                ProjectName: !Ref DeployOnProductionProject

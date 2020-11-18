@@ -1,0 +1,24 @@
+{
+  "name": "heavy-water-pipeline",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "serverless-dotenv-plugin": "^3.0.0",
+    "serverless-functions-base-path": "^1.0.32",
+    "serverless-ignore": "^0.1.5",
+    "serverless-offline": "^6.8.0",
+    "serverless-plugin-existing-s3": "^2.4.0",
+    "serverless-pseudo-parameters": "^2.5.0",
+    "serverless-ssm-fetch": "^1.0.2",
+    "serverless-step-functions": "^2.26.0"
+  }
+}
