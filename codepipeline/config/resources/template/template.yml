@@ -1,4 +1,26 @@
 Resources:
+    SNSTopic:
+        Type: "AWS::SNS::Topic"
+        Properties:
+            DisplayName: ""
+            TopicName: "hw-codebuild-failed-sns"
+    CloudWatchAlarm:
+        Type: "AWS::CloudWatch::Alarm"
+        Properties:
+            AlarmName: "Hw-devops-demo-alarm"
+            ActionsEnabled: true
+            AlarmActions: 
+              - !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:hw-codebuild-failed-sns"
+            MetricName: "FailedBuilds"
+            Namespace: "AWS/CodeBuild"
+            Statistic: "Average"
+            Period: 300
+            EvaluationPeriods: 3
+            DatapointsToAlarm: 3
+            Threshold: 1
+            ComparisonOperator: "GreaterThanThreshold"
+            TreatMissingData: "missing"
+    
     DeployOnProductionProject:
       Type: "AWS::CodeBuild::Project"
       Properties:
@@ -93,6 +115,49 @@ Resources:
                   Branch: '{{resolve:ssm:pipeline_githubBranch:1}}'
                   OAuthToken: '{{resolve:secretsmanager:PIPELINE_GITHUB:SecretString:githubAccessToken}}'
                 RunOrder: 1
+          - Name: "UnitTest"
+            Actions:
+            - Name: "UnitTestBuild"
+              InputArtifacts: 
+                - Name: "SourceArtifact"
+              OutputArtifacts:
+                - Name: "unitTestDeployArtifact"
+              ActionTypeId:
+                Version: '1'
+                Owner: "AWS"
+                Category: "Build"
+                Provider: "CodeBuild"
+              RunOrder: 1
+              Configuration:
+                ProjectName: !Ref UnitTestHWProject
+          
+          - Name: "IntegrationTest"
+            Actions:
+            - Name: "IntegrationTestBuild"
+              InputArtifacts: 
+                - Name: "SourceArtifact"
+              OutputArtifacts:
+                - Name: "intigrationTestDeployArtifact"
+              ActionTypeId:
+                Version: '1'
+                Owner: "AWS"
+                Category: "Build"
+                Provider: "CodeBuild"
+              RunOrder: 1
+              Configuration:
+                ProjectName: !Ref IntegrationTestHWProject
+
+          - Name: "MannualApproval"
+            Actions: 
+            - Name: "prodApproval"
+              ActionTypeId: 
+                Category: "Approval"
+                Owner: "AWS"
+                Provider: "Manual"
+                Version: "1"
+              Region: !Ref AWS::Region
+              RunOrder: 1
+
           - Name: "DeployToPrd"
             Actions:
             - Name: "DeployToPrd"
