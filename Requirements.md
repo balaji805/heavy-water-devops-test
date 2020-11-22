@@ -2,7 +2,7 @@
 
 This doc describes the solution for the heavy water devops challenge 
 
-<img src='https://pasteboard.co/JBzMTJy.png'>
+https://pasteboard.co/JBzMTJy.png
 
 
 # Resources Used
@@ -29,7 +29,7 @@ Aws Cloudformation - Used for creating cloudformation stacks
 # CodeBuild Steps
 
 
-<img src='https://pasteboard.co/JBzM5fv.png'>
+https://pasteboard.co/JBzM5fv.png
 
 Source1 -  Used for pulling source code from the github repo using github version 1 and stores it as an artifact whenever a push happens 
 
