@@ -1,0 +1,14 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - npm install -g serverless
+      - cd codepipeline
+      - npm install
+  build:
+    commands:
+      - echo $STAGE
+      - echo "Deploying Clouformation Pipeline"
+      - serverless deploy
+      - echo "Clouformation Pipeline Deployed"
