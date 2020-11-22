@@ -196,7 +196,7 @@ Resources:
                 Configuration:
                   Owner: '{{resolve:ssm:pipeline_githubOwner:1}}'
                   Repo: '{{resolve:ssm:pipeline_githubRepo:1}}'
-                  Branch: '{{resolve:ssm:pipeline_dev_githubBranch:1}}'
+                  Branch: '{{resolve:ssm:pipeline_dev_githubBranch:2}}'
                   OAuthToken: '{{resolve:secretsmanager:PIPELINE_GITHUB:SecretString:githubAccessToken}}'
                 RunOrder: 1
           - Name: "UnitTest"
