@@ -5,5 +5,5 @@ phases:
     commands:
       - set -x 
   build:
-    commands:
+    commands:  
       - echo "Unit Test Completed"

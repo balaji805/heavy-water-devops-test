@@ -6,4 +6,5 @@ phases:
       - set -x 
   build:
     commands:
+      
       - echo "Integration Test Completed"

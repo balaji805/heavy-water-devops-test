@@ -173,3 +173,60 @@ Resources:
               RunOrder: 1
               Configuration:
                 ProjectName: !Ref DeployOnProductionProject
+
+    heavyWaterDevPipeline: 
+      Type: "AWS::CodePipeline::Pipeline"
+      Properties: 
+        RoleArn: '{{resolve:ssm:pipeline_role_arn:1}}'
+        ArtifactStore: 
+          Type: S3 
+          Location: '{{resolve:ssm:pipeline_bucket_name:1}}'
+        Stages:
+          - Name: Source
+            Actions:
+              - Name: Source-dev
+                ActionTypeId:
+                  Category: Source
+                  Owner: ThirdParty
+                  Version: "1"
+                  Provider: GitHub
+                Namespace: SourceDevVariables
+                OutputArtifacts:
+                  - Name: SourceDevArtifact
+                Configuration:
+                  Owner: '{{resolve:ssm:pipeline_githubOwner:1}}'
+                  Repo: '{{resolve:ssm:pipeline_githubRepo:1}}'
+                  Branch: '{{resolve:ssm:pipeline_dev_githubBranch:1}}'
+                  OAuthToken: '{{resolve:secretsmanager:PIPELINE_GITHUB:SecretString:githubAccessToken}}'
+                RunOrder: 1
+          - Name: "UnitTest"
+            Actions:
+            - Name: "UnitTestBuild"
+              InputArtifacts: 
+                - Name: "SourceDevArtifact"
+              OutputArtifacts:
+                - Name: "unitTestDeployArtifact"
+              ActionTypeId:
+                Version: '1'
+                Owner: "AWS"
+                Category: "Build"
+                Provider: "CodeBuild"
+              RunOrder: 1
+              Configuration:
+                ProjectName: !Ref UnitTestHWProject
+          
+          - Name: "IntegrationTest"
+            Actions:
+            - Name: "IntegrationTestBuild"
+              InputArtifacts: 
+                - Name: "SourceDevArtifact"
+              OutputArtifacts:
+                - Name: "intigrationTestDeployArtifact"
+              ActionTypeId:
+                Version: '1'
+                Owner: "AWS"
+                Category: "Build"
+                Provider: "CodeBuild"
+              RunOrder: 1
+              Configuration:
+                ProjectName: !Ref IntegrationTestHWProject
