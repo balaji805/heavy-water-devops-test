@@ -5,5 +5,6 @@ phases:
     commands:
       - set -x 
   build:
-    commands:  
+    commands:
+      - python pythonsampletest.py  
       - echo "Unit Test Completed"
