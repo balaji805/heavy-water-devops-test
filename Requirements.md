@@ -121,6 +121,13 @@ pipeline_githubBranch - github branch name
 4. Go to the codepipeline folder and run serverless deploy -r << aws.region >> if serverless is not installed on your system you can do 
 `npm i serverless -g`
 
+
+# Output Resources that should be created
+
+[pipeline Resources](https://pasteboard.co/JBI7fKV.png)
+
+[Pre-Defined Template Resources] (https://pasteboard.co/JBIbCNH.png)
+
 That's it Thank You 
 
 
