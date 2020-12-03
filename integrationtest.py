@@ -3,7 +3,7 @@ import botocore
 import json
 
 # Set "running_locally" flag if you are running the integration test locally
-running_locally = True
+running_locally = False
 
 if running_locally:
 
@@ -23,9 +23,6 @@ else:
     lambda_client = boto3.client('lambda')
 
 
-# Invoke your Lambda function as you normally usually do. The function will run
-# locally if it is configured to do so
-response = lambda_client.invoke(FunctionName="ServiceApiFunction")
-
+response = lambda_client.invoke(FunctionName="heavy-water-demo-ServiceApiFunction-12YSPEQPCTKOW")
 # Verify the response
-assert response == "<<DESIRED_REPONSE>>"
+assert response["StatusCode"] == 200

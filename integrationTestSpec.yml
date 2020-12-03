@@ -6,5 +6,5 @@ phases:
       - set -x 
   build:
     commands:
-      
+      - python integrationTestSpec.yml
       - echo "Integration Test Completed"
