@@ -184,16 +184,16 @@ Resources:
               Configuration:
                 ProjectName: !Ref IntegrationTestHWProject
 
-          # - Name: "MannualApproval"
-          #   Actions: 
-          #   - Name: "prodApproval"
-          #     ActionTypeId: 
-          #       Category: "Approval"
-          #       Owner: "AWS"
-          #       Provider: "Manual"
-          #       Version: "1"
-          #     Region: !Ref AWS::Region
-          #     RunOrder: 1
+           - Name: "MannualApproval"
+             Actions: 
+            - Name: "prodApproval"
+              ActionTypeId: 
+                Category: "Approval"
+                Owner: "AWS"
+                Provider: "Manual"
+                Version: "1"
+                Region: !Ref AWS::Region
+                RunOrder: 1
 
           - Name: "DeployToPrd"
             Actions:
