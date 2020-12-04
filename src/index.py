@@ -12,6 +12,7 @@ def resize(event, context):
         key= request_body['name'],
     )
     obj.put(Body=json.dumps(request_body['content']), ContentType='application/json')
+    print('hello' )
 
     
     return {
